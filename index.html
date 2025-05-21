@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="styles.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    </head>
+
+  <body>
+    <header>
+        <div class="h-cont-t">
+            <h1>Templates for Digital Campus</h1>
+        </div>
+    </header>
+    <hr>
+    <main>
+        <div class="rep-1">
+            <div class="slide-cont-flex">
+                <div class="loc-card">Restaurants</div>
+                <div class="loc-card">Bars</div>
+                <div class="loc-card">Parks</div>
+                <div class="loc-card">Restaurants</div>
+                <div class="loc-card">Culture</div>
+                <div class="loc-card">Night-life</div>
+            </div>
+        </div>
+        <hr>
+            <div class="rep-2">
+               <div class="map-cont">
+                    <div id="map"></div>
+                    <div class="options-dropdown">
+                            <div class="map-category" id="hover-restaurants">
+                                Restaurants
+                              </div>
+
+                              <div class="map-category" id="hover-parks">
+                                Parks
+                              </div>
+
+                              <div class="map-category" id="reset-map">
+                                Reset map
+                              </div>
+
+
+                    </div>
+                </div> 
+
+            <script>
+
+                    const map = L.map('map', {
+                    minZoom: 12,
+                    maxZoom: 18,
+                    maxBounds: L.latLngBounds([52.47, 13.30], [52.57, 13.55]),
+                    maxBoundsViscosity: 1.0 // 1.0 = can't move outside at all
+                    }).setView([52.52, 13.405], 15);
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(map);
+
+                    const places = [
+                    { name: "Burger Heaven", type: "restaurant", coords: [52.52, 13.405] },
+                    { name: "Park Life", type: "park", coords: [52.522, 13.41] },
+                    { name: "Pasta Planet", type: "restaurant", coords: [52.519, 13.402] }
+                    ];
+
+                    const markers = {
+                    restaurant: [],
+                    park: []
+                    };
+
+                    // Add markers and sort into type arrays
+                    places.forEach(place => {
+                    const marker = L.marker(place.coords)
+                        .addTo(map)
+                        .bindTooltip(place.name, { permanent: false, direction: 'top' });
+
+                    markers[place.type].push(marker); // <-- THIS is important
+                    });
+
+                    // DOM references
+                    const restaurantDiv = document.getElementById("hover-restaurants");
+                    const parkDiv = document.getElementById("hover-parks");
+                    const resetMap = document.getElementById("reset-map");
+
+                    // Hover effects using tooltips
+                    restaurantDiv.addEventListener("mouseenter", () => {
+                    markers.restaurant.forEach(marker => marker.openTooltip());
+                    });
+                    restaurantDiv.addEventListener("mouseleave", () => {
+                    markers.restaurant.forEach(marker => marker.closeTooltip());
+                    });
+
+                    parkDiv.addEventListener("mouseenter", () => {
+                    markers.park.forEach(marker => marker.openTooltip());
+                    });
+                    parkDiv.addEventListener("mouseleave", () => {
+                    markers.park.forEach(marker => marker.closeTooltip());
+                    });
+
+                
+            </script>
+
+        </div>
+    </main>
+
+  </body>
+</html>
